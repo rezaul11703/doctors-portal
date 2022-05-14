@@ -7,6 +7,7 @@ import Appoinment from "./Pages/Appoinment/Appoinment"
 import ContactUs from "./Pages/ContactUs/ContactUs"
 import Login from "./Pages/LogIn/LogIn"
 import Reviews from "./Pages/Reviews/Reviews"
+import Footer from './Pages/Shared/Footer/Footer';
 function App() {
   return (
     <div>
@@ -19,6 +20,7 @@ function App() {
         <Route path="login" element={<Login />} />
         <Route path="reviews" element={<Reviews />} />
       </Routes>
+      <Footer></Footer>
     </div>
   );
 }

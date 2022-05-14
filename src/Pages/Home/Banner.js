@@ -1,15 +1,16 @@
 import React from 'react';
-import banner from '../../assets/images/chair.png'
+import chair from "../../assets/images/chair.png"
+import ButtonPrimary from '../Shared/ButtonPrimary';
 
 const Banner = () => {
   return (
-    <div class="hero min-h-screen bg-base-200">
+    <div class="hero min-h-screen bg-base-200 bg-[url('/src/assets/images/bg.png')] ">
   <div class="hero-content flex-col lg:flex-row-reverse">
-    <div><img src={banner}/></div>
-    <div>
-      <h1 class="text-5xl font-bold">Box Office News!</h1>
-      <p class="py-6">Provident cupiditate voluptatem et in. Quaerat fugiat ut assumenda excepturi exercitationem quasi. In deleniti eaque aut repudiandae et a id nisi.</p>
-      <button class="btn btn-primary">Get Started</button>
+    <div> <img src={chair} class="max-w-sm  rounded-lg shadow-2xl" /></div>
+    <div class='ml-12' >
+      <h1 class="text-5xl font-bold ">Your New Smile Starts Here</h1>
+      <p class="py-6 mr-24">Provident cupiditate voluptatem et in. Quaerat fugiat ut assumenda excepturi exercitationem quasi. In deleniti eaque aut repudiandae et a id nisi.</p>
+      <ButtonPrimary> Get Started</ButtonPrimary>
     </div>
   </div>
 </div>
