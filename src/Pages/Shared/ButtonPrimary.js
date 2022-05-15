@@ -1,9 +1,11 @@
-import React from 'react';
+import React from "react";
 
-const ButtonPrimary = ({children}) => {
+const ButtonPrimary = ({ children }) => {
   return (
     <div>
-      <button class="btn bg-primary bg-gradient-to-r from-secondary to-primary ">{children}</button>
+      <button className="btn bg-primary bg-gradient-to-r from-secondary to-primary ">
+        {children}
+      </button>
     </div>
   );
 };
