@@ -1,16 +1,16 @@
 import React from "react";
 import {
-  useSignInWithEmailAndPassword,
+  useCreateUserWithEmailAndPassword,
   useSignInWithGoogle,
 } from "react-firebase-hooks/auth";
 import auth from "../../firebase.init";
 import { useForm } from "react-hook-form";
 import Loading from "../Shared/Loading";
 import { Link } from "react-router-dom";
-const LogIn = () => {
+const SignUp = () => {
   const [signInWithGoogle, gUser, gLoading, gError] = useSignInWithGoogle(auth);
-  const [signInWithEmailAndPassword, user, loading, error] =
-    useSignInWithEmailAndPassword(auth);
+  const [createUserWithEmailAndPassword, user, loading, error] =
+    useCreateUserWithEmailAndPassword(auth);
   const {
     register,
     formState: { errors },
@@ -29,9 +29,8 @@ const LogIn = () => {
   }
 
   const onSubmit = (data) => {
-    signInWithEmailAndPassword(data.email, data.password);
+    createUserWithEmailAndPassword(data.email, data.password);
   };
-
   return (
     <div className="flex justify-center align-center h-screen ">
       <div className="card w-96 bg-base-100 shadow-xl">
@@ -39,6 +38,29 @@ const LogIn = () => {
           <h2 className="text-center text-bold text-primary tex-xl">Log In</h2>
         </div>
         <form onSubmit={handleSubmit(onSubmit)}>
+          <div class="form-control w-full max-w-xs">
+            <label class="label">
+              <span class="label-text">Name</span>
+            </label>
+            <input
+              type="name"
+              placeholder="Enter Your Name Here"
+              class="input input-bordered w-full max-w-xs"
+              {...register("name", {
+                required: {
+                  value: true,
+                  message: "please Input a Valid Email",
+                },
+              })}
+            />
+            <label class="label">
+              {errors.email?.type === "required" && (
+                <span class="label-text-alt text-red">
+                  {errors.email.message}
+                </span>
+              )}
+            </label>
+          </div>
           <div class="form-control w-full max-w-xs">
             <label class="label">
               <span class="label-text">Email</span>
@@ -104,13 +126,17 @@ const LogIn = () => {
             </label>
           </div>
           {signInError}
-          <input className="btn w-full max-w-xs" type="submit" value="login" />
+          <input
+            className="btn w-full max-w-xs"
+            type="submit"
+            value="Sign up"
+          />
         </form>
         <small>
           If new Here? Please{" "}
-          <Link to="/signup" className="text-primary">
+          <Link to="/login" className="text-primary">
             {" "}
-            Signup{" "}
+            Log In{" "}
           </Link>
         </small>
 
@@ -123,4 +149,4 @@ const LogIn = () => {
   );
 };
 
-export default LogIn;
+export default SignUp;
