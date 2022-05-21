@@ -1,12 +1,47 @@
 import React from "react";
 import { format } from "date-fns";
-
-const Treatment = ({ treatment, date, setTreatment }) => {
-  const { name, slots } = treatment;
+import { useAuthState } from "react-firebase-hooks/auth";
+import auth from "../../firebase.init";
+import { toast } from "react-toastify";
+const Treatment = ({ treatment, date, setTreatment, refetch }) => {
+  const { _id, name, slots } = treatment;
+  const [user, loading, error] = useAuthState(auth);
+  const formattedDate = format(date, "PP");
+  console.log(user);
   const handleForm = (event) => {
     event.preventDefault();
     const email = event.target.email.value;
-    setTreatment(null);
+    const slot = event.target.select.value;
+    const booking = {
+      treatmentId: _id,
+      treatmentName: name,
+      date: formattedDate,
+      slot,
+      patient: user.email,
+      patientName: user.displayName,
+      phone: event.target.number.value,
+    };
+    fetch("http://localhost:5000/booking", {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+      },
+      body: JSON.stringify(booking),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.success) {
+          toast(
+            `Your Appointment Set successfully on ${formattedDate} at ${slot}`
+          );
+        } else {
+          toast(
+            `You have already have an appointment on ${data.booking?.date} at ${data.booking?.slot}`
+          );
+        }
+        refetch();
+        setTreatment(null);
+      });
   };
   return (
     <div>
@@ -38,14 +73,16 @@ const Treatment = ({ treatment, date, setTreatment }) => {
             <input
               type="text"
               name="name"
-              placeholder="Your Full Name"
+              value={user.displayName}
               className="input input-bordered w-full max-w-xs"
+              disabled
             />
             <input
               type="email"
               name="email"
-              placeholder="Your Email"
+              value={user.email}
               className="input input-bordered w-full max-w-xs"
+              disabled
             />
             <input
               type="number"

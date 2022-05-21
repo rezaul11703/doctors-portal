@@ -1,16 +1,32 @@
 import { format } from "date-fns";
 import React, { useEffect, useState } from "react";
+import { useQuery } from "react-query";
+import Loading from "../Shared/Loading";
 import Service from "./Service";
 import Treatment from "./Treatment";
 
 const AvailableAppointment = ({ date }) => {
-  const [services, setServices] = useState([]);
   const [treatment, setTreatment] = useState(null);
-  useEffect(() => {
-    fetch("http://localhost:5000/service")
-      .then((res) => res.json())
-      .then((data) => setServices(data));
-  }, []);
+  const formattedDate = format(date, "PP");
+  const {
+    isLoading,
+    error,
+    data: allServices,
+    refetch,
+  } = useQuery(["repoData", formattedDate], () =>
+    fetch(`http://localhost:5000/available?date=${formattedDate}`).then((res) =>
+      res.json()
+    )
+  );
+
+  if (isLoading) return <Loading></Loading>;
+
+  if (error) return "An error has occurred: " + error.message;
+  // useEffect(() => {
+  //   // fetch(`http://localhost:5000/available?date=${formattedDate}`)
+  // //     .then((res) => res.json())
+  // //     .then((data) => setServices(data));
+  // // }, [formattedDate]);
   return (
     <div>
       <h2 className="text-secondary  text-2xl text-center">
@@ -22,7 +38,7 @@ const AvailableAppointment = ({ date }) => {
         Please Select a service
       </h2>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {services.map((service) => (
+        {allServices?.map((service) => (
           <Service
             key={service._id}
             service={service}
@@ -35,6 +51,7 @@ const AvailableAppointment = ({ date }) => {
           treatment={treatment}
           date={date}
           setTreatment={setTreatment}
+          refetch={refetch}
         >
           {" "}
         </Treatment>
