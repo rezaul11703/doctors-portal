@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   useSignInWithEmailAndPassword,
   useSignInWithGoogle,
@@ -7,6 +7,7 @@ import auth from "../../firebase.init";
 import { useForm } from "react-hook-form";
 import Loading from "../Shared/Loading";
 import { Link, useLocation, useNavigate } from "react-router-dom";
+import useToken from "../Hook/useToken";
 const LogIn = () => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -18,22 +19,24 @@ const LogIn = () => {
     formState: { errors },
     handleSubmit,
   } = useForm();
+  const [token] = useToken(gUser || user);
   let signInError;
   let from = location.state?.from?.pathname || "/";
   // if true|| loading it will loading all the time
-  if (loading || gLoading) {
-    return <Loading></Loading>;
-  }
-  if (error || gError) {
-    signInError = <p>{error?.message || gError?.message}</p>;
-  }
-  if (gUser || user) {
-    console.log(gUser || user);
-  }
+  useEffect(() => {
+    if (loading || gLoading) {
+      return <Loading></Loading>;
+    }
+    if (error || gError) {
+      signInError = <p>{error?.message || gError?.message}</p>;
+    }
+    if (token) {
+      navigate(from, { replace: true });
+    }
+  }, [token, from, navigate]);
 
   const onSubmit = async (data) => {
     await signInWithEmailAndPassword(data.email, data.password);
-    await navigate(from, { replace: true });
   };
 
   return (

@@ -17,7 +17,6 @@ const SignUp = () => {
   const [createUserWithEmailAndPassword, user, loading, error] =
     useCreateUserWithEmailAndPassword(auth);
   const [updateProfile, updating, upadatingError] = useUpdateProfile(auth);
-  const [sendEmailVerification, sending] = useSendEmailVerification(auth);
 
   const navigate = useNavigate();
   const {
@@ -28,6 +27,7 @@ const SignUp = () => {
 
   ///for Video 75
   const [token] = useToken(user || gUser);
+  ///===========================--------------------
   let signInError;
   // if true|| loading it will loading all the time
   if (loading || gLoading || updating) {
@@ -38,7 +38,7 @@ const SignUp = () => {
   }
   if (token) {
     alert("Successfully Sign Up");
-    // return navigate("/");
+    return navigate("/");
   }
 
   const onSubmit = async (data) => {
